@@ -67,11 +67,10 @@ const tools = [
 
 type ToolCardProps = {
   tool: typeof tools[0];
-  setActivePage: (page: string) => void;
 };
 
-const ToolCard: React.FC<ToolCardProps> = ({ tool, setActivePage }) => {
-    const { title, description, url, icon, tag, iconBg, isInternal, pageKey } = tool;
+const ToolCard: React.FC<ToolCardProps> = ({ tool }) => {
+    const { title, description, url, icon, tag, iconBg } = tool;
 
     const content = (
          <div className="bg-white rounded-lg shadow-md p-6 flex flex-col h-full group transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-2 border border-slate-200">
@@ -97,10 +96,6 @@ const ToolCard: React.FC<ToolCardProps> = ({ tool, setActivePage }) => {
             </div>
         </div>
     );
-    
-    if (isInternal && pageKey) {
-        return <button onClick={() => setActivePage(pageKey)} className="text-left w-full h-full">{content}</button>;
-    }
 
     return (
         <a href={url} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
@@ -129,7 +124,7 @@ const ProjectHubPage: React.FC<ProjectHubPageProps> = ({ setActivePage }) => {
       <div className="max-w-7xl mx-auto mt-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {tools.map(tool => (
-                <ToolCard key={tool.title} tool={tool} setActivePage={setActivePage} />
+                <ToolCard key={tool.title} tool={tool} />
             ))}
         </div>
       </div>
