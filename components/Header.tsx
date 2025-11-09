@@ -45,25 +45,24 @@ const NavLink: React.FC<NavLinkProps> = ({ label, pageKey, activePage, onClick }
 type HeaderProps = {
     activePage: string;
     setActivePage: (page: string) => void;
+    cartItemCount: number;
+    onCartClick: () => void;
 };
 
-const Header: React.FC<HeaderProps> = ({ activePage, setActivePage }) => {
+const Header: React.FC<HeaderProps> = ({ activePage, setActivePage, cartItemCount, onCartClick }) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Set isScrolled to true if user scrolls down more than 10px, false otherwise
       setIsScrolled(window.scrollY > 10);
     };
 
-    // Add event listener when component mounts
     window.addEventListener('scroll', handleScroll);
 
-    // Remove event listener when component unmounts for cleanup
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []); // Empty dependency array ensures this effect runs only once
+  }, []);
 
   return (
     <header className={`bg-white/80 backdrop-blur-sm sticky top-0 z-40 transition-all duration-300 ease-in-out ${isScrolled ? 'py-1 shadow-lg' : 'py-3 shadow-md'}`}>
@@ -75,11 +74,28 @@ const Header: React.FC<HeaderProps> = ({ activePage, setActivePage }) => {
                   Kenpro Automation Furniture
                 </h1>
             </div>
-            <nav className="flex space-x-2">
+            <nav className="flex space-x-2 items-center">
                 <NavLink label="Home" pageKey="home" activePage={activePage} onClick={setActivePage} />
+                <NavLink label="Store" pageKey="store" activePage={activePage} onClick={setActivePage} />
                 <NavLink label="Services" pageKey="services" activePage={activePage} onClick={setActivePage} />
                 <NavLink label="Project Planner" pageKey="planner" activePage={activePage} onClick={setActivePage} />
+                <NavLink label="Project Hub" pageKey="projectHub" activePage={activePage} onClick={setActivePage} />
                 <NavLink label="Contact" pageKey="contact" activePage={activePage} onClick={setActivePage} />
+                <div className="w-px h-6 bg-slate-200 mx-2"></div>
+                <button 
+                  onClick={onCartClick} 
+                  className="relative p-2 rounded-full text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+                  aria-label={`Shopping cart with ${cartItemCount} items`}
+                >
+                    <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.874a.5.5 0 00-.478-.636H5.214M6 18a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zM15.75 18a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                    </svg>
+                    {cartItemCount > 0 && (
+                        <span className="absolute top-0 right-0 block h-5 w-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center ring-2 ring-white transform translate-x-1/3 -translate-y-1/3">
+                            {cartItemCount}
+                        </span>
+                    )}
+                </button>
             </nav>
         </div>
       </div>

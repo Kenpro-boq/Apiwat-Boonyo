@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import Header from './components/Header';
-import AIPlanner from './components/IdeaGenerator'; // Repurposed IdeaGenerator as AIPlanner
+import AIPlanner from './components/IdeaGenerator';
+import StorePage from './components/Store';
+import Cart from './components/Cart';
+import { Product, CartItem } from './types';
+import ProjectHubPage from './components/ProjectHub';
 
 // --- Page Components ---
 
@@ -16,10 +20,16 @@ const HomePage: React.FC<PageProps> = ({ setActivePage }) => (
     <p className="mt-4 max-w-2xl mx-auto text-lg text-slate-600">
       At Kenpro, we blend cutting-edge technology with timeless design to create furniture that adapts to your life. Discover the future of living, today.
     </p>
-    <div className="mt-8">
+    <div className="mt-8 flex justify-center items-center gap-4">
       <button
-        onClick={() => setActivePage('planner')}
+        onClick={() => setActivePage('store')}
         className="inline-block px-8 py-4 bg-sky-600 text-white font-bold text-lg rounded-lg shadow-lg hover:bg-sky-700 transition-transform transform hover:scale-105"
+      >
+        Shop Now
+      </button>
+       <button
+        onClick={() => setActivePage('planner')}
+        className="inline-block px-8 py-4 bg-slate-100 text-sky-700 font-bold text-lg rounded-lg shadow-lg hover:bg-slate-200 transition-transform transform hover:scale-105"
       >
         Plan Your Project
       </button>
@@ -78,13 +88,54 @@ const ContactPage: React.FC = () => (
 
 const App: React.FC = () => {
   const [activePage, setActivePage] = useState('home');
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const handleAddToCart = (product: Product) => {
+    setCart(prevCart => {
+      const existingItem = prevCart.find(item => item.id === product.id);
+      if (existingItem) {
+        return prevCart.map(item =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      }
+      return [...prevCart, { ...product, quantity: 1 }];
+    });
+    setIsCartOpen(true);
+  };
+
+  const handleUpdateCartQuantity = (productId: number, newQuantity: number) => {
+    if (newQuantity <= 0) {
+      handleRemoveFromCart(productId);
+      return;
+    }
+    setCart(prevCart =>
+      prevCart.map(item =>
+        item.id === productId ? { ...item, quantity: newQuantity } : item
+      )
+    );
+  };
+
+  const handleRemoveFromCart = (productId: number) => {
+    setCart(prevCart => prevCart.filter(item => item.id !== productId));
+  };
+  
+  const handleClearCart = () => {
+    setCart([]);
+  };
+
+  const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const renderPage = () => {
     switch (activePage) {
       case 'services':
         return <ServicesPage />;
+      case 'store':
+        return <StorePage onAddToCart={handleAddToCart} />;
       case 'planner':
         return <AIPlanner />;
+      case 'projectHub':
+        return <ProjectHubPage setActivePage={setActivePage} />;
       case 'contact':
         return <ContactPage />;
       case 'home':
@@ -94,8 +145,21 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-800 antialiased">
-      <Header activePage={activePage} setActivePage={setActivePage} />
+    <div className="min-h-screen bg-slate-50 text-slate-800 antialiased">
+      <Header
+        activePage={activePage}
+        setActivePage={setActivePage}
+        cartItemCount={cartItemCount}
+        onCartClick={() => setIsCartOpen(true)}
+      />
+      <Cart
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+        items={cart}
+        onUpdateQuantity={handleUpdateCartQuantity}
+        onRemoveItem={handleRemoveFromCart}
+        onClearCart={handleClearCart}
+      />
       <main className="p-4 md:p-8">
         <div className="max-w-7xl mx-auto">
           {renderPage()}
