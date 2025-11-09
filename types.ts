@@ -1,6 +1,1 @@
-export interface ProjectPlan {
-  projectName: string;
-  suggestedFeatures: string[];
-  materialRecommendations: string[];
-  nextSteps: string;
-}
+// No shared types are needed at this time.

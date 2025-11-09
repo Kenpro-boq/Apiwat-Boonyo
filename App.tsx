@@ -21,7 +21,7 @@ const HomePage: React.FC<PageProps> = ({ setActivePage }) => (
         onClick={() => setActivePage('planner')}
         className="inline-block px-8 py-4 bg-sky-600 text-white font-bold text-lg rounded-lg shadow-lg hover:bg-sky-700 transition-transform transform hover:scale-105"
       >
-        Plan Your Project with AI
+        Plan Your Project
       </button>
     </div>
   </div>
@@ -84,7 +84,7 @@ const App: React.FC = () => {
       case 'services':
         return <ServicesPage />;
       case 'planner':
-        return <AIPlanner setActivePage={setActivePage} />;
+        return <AIPlanner />;
       case 'contact':
         return <ContactPage />;
       case 'home':
