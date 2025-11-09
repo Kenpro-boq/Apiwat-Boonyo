@@ -1,6 +1,6 @@
-
-export interface SiteIdea {
-  title: string;
-  tagline: string;
-  pages: string[];
+export interface ProjectPlan {
+  projectName: string;
+  suggestedFeatures: string[];
+  materialRecommendations: string[];
+  nextSteps: string;
 }

@@ -1,5 +1,12 @@
 import React from 'react';
 
+type NavLinkProps = {
+    label: string;
+    pageKey: string;
+    activePage: string;
+    onClick: (pageKey: string) => void;
+};
+
 const KenproLogo: React.FC = () => (
     <svg className="w-10 h-10 mr-3" viewBox="0 0 52 59" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -15,14 +22,42 @@ const KenproLogo: React.FC = () => (
     </svg>
 );
 
+const NavLink: React.FC<NavLinkProps> = ({ label, pageKey, activePage, onClick }) => {
+    const isActive = activePage === pageKey;
+    return (
+        <button
+            onClick={() => onClick(pageKey)}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                isActive
+                    ? 'bg-sky-100 text-sky-700'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            }`}
+        >
+            {label}
+        </button>
+    );
+};
 
-const Header: React.FC = () => {
+type HeaderProps = {
+    activePage: string;
+    setActivePage: (page: string) => void;
+};
+
+const Header: React.FC<HeaderProps> = ({ activePage, setActivePage }) => {
   return (
-    <header className="bg-white shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="flex items-center">
-          <KenproLogo />
-          <h1 className="text-2xl font-bold text-sky-600">Kenpro Automation Furniture</h1>
+    <header className="bg-white shadow-md sticky top-0 z-40">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+            <div className="flex items-center cursor-pointer" onClick={() => setActivePage('home')}>
+                <KenproLogo />
+                <h1 className="text-xl font-bold text-sky-600">Kenpro Automation Furniture</h1>
+            </div>
+            <nav className="flex space-x-2">
+                <NavLink label="Home" pageKey="home" activePage={activePage} onClick={setActivePage} />
+                <NavLink label="Services" pageKey="services" activePage={activePage} onClick={setActivePage} />
+                <NavLink label="AI Planner" pageKey="planner" activePage={activePage} onClick={setActivePage} />
+                <NavLink label="Contact" pageKey="contact" activePage={activePage} onClick={setActivePage} />
+            </nav>
         </div>
       </div>
     </header>
