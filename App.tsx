@@ -135,7 +135,7 @@ const App: React.FC = () => {
       case 'planner':
         return <AIPlanner />;
       case 'projectHub':
-        return <ProjectHubPage setActivePage={setActivePage} />;
+        return <ProjectHubPage />;
       case 'contact':
         return <ContactPage />;
       case 'home':

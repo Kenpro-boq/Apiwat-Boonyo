@@ -106,12 +106,7 @@ const ToolCard: React.FC<ToolCardProps> = ({ tool }) => {
 
 // --- Main Page Component ---
 
-type ProjectHubPageProps = {
-  setActivePage: (page: string) => void;
-};
-
-
-const ProjectHubPage: React.FC<ProjectHubPageProps> = ({ setActivePage }) => {
+const ProjectHubPage: React.FC = () => {
   return (
     <div className="animate-fade-in">
       <div className="text-center">
