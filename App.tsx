@@ -5,6 +5,7 @@ import StorePage from './components/Store';
 import Cart from './components/Cart';
 import { Product, CartItem } from './types';
 import ProjectHubPage from './components/ProjectHub';
+import ProductDetailPage from './components/ProductDetailPage';
 
 // --- Page Components ---
 
@@ -88,6 +89,7 @@ const ContactPage: React.FC = () => (
 
 const App: React.FC = () => {
   const [activePage, setActivePage] = useState('home');
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
@@ -124,6 +126,12 @@ const App: React.FC = () => {
     setCart([]);
   };
 
+  const handleSelectProduct = (product: Product) => {
+    setSelectedProduct(product);
+    setActivePage('productDetail');
+    window.scrollTo(0, 0);
+  };
+
   const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const renderPage = () => {
@@ -131,7 +139,13 @@ const App: React.FC = () => {
       case 'services':
         return <ServicesPage />;
       case 'store':
-        return <StorePage onAddToCart={handleAddToCart} />;
+        return <StorePage onAddToCart={handleAddToCart} onSelectProduct={handleSelectProduct} />;
+      case 'productDetail':
+        if (selectedProduct) {
+          return <ProductDetailPage product={selectedProduct} onAddToCart={handleAddToCart} setActivePage={setActivePage} />;
+        }
+        // Fallback to store if no product is selected
+        return <StorePage onAddToCart={handleAddToCart} onSelectProduct={handleSelectProduct} />;
       case 'planner':
         return <AIPlanner />;
       case 'projectHub':
